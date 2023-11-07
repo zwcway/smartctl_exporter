@@ -2,8 +2,8 @@
 [![Container Repository on Quay](https://quay.io/repository/zwcway/smartctl-exporter/status "Container Repository on Quay")](https://quay.io/repository/zwcway/smartctl-exporter)
 
 # Add some features
-- --smartctl.device: Support use wildcard of devices path or system-link
-- support format raw value by device family. just like -v 1,raw48:54 in smartctl
+- `--smartctl.device`: Support use wildcard of devices path or system-link
+- support format the raw value by device family. just like `-v 1,raw48:54` in smartctl
   - add `seagate`
 
 # smartctl_exporter
