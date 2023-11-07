@@ -1,0 +1,8 @@
+# /etc/default/smartctl_exporter
+SMARTCTL_EXPORTER_OPTS=" \
+--smartctl.path=/usr/sbin/smartctl \
+--smartctl.device='/dev/disk/by-path/pci-0000:0*-ata-[0-6]' \
+--web.listen-address=:9101 \
+--log.level=info \
+--log.format=logfmt \
+"
