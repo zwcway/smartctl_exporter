@@ -82,5 +82,4 @@ func (f *deviceFilter) ignored(name string) bool {
 		(f.acceptPattern != nil && !f.acceptPattern.MatchString(name))) ||
 		(f.ignores != nil && slices.Index(f.ignores, name) >= 0) ||
 		(f.accepts != nil && slices.Index(f.accepts, name) >= 0)
-
 }

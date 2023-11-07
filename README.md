@@ -2,7 +2,7 @@
 [![Container Repository on Quay](https://quay.io/repository/zwcway/smartctl-exporter/status "Container Repository on Quay")](https://quay.io/repository/zwcway/smartctl-exporter)
 
 # Add some features
-- `--smartctl.device`: Support use wildcard of devices path or system-link
+- `--smartctl.device`: Support use wildcard of devices path or symbolic link
 - support format the raw value by device family. just like `-v 1,raw48:54` in smartctl
   - add `seagate`
 
@@ -35,7 +35,7 @@ Flags:
                                rescanning takes place. If any devices are configured with smartctl.device also no rescanning takes
                                place.
       --smartctl.device=SMARTCTL.DEVICE ...  
-                               The device to monitor (repeatable). Support use wildcard of devices path or system-link
+                               The device to monitor (repeatable). Support use wildcard of devices path or symbolic link
       --smartctl.device-exclude=""
                                Regexp of devices to exclude from automatic scanning. (mutually exclusive to
                                device-include)

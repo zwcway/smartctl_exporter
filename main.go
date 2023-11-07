@@ -90,7 +90,7 @@ var (
 		"The interval between rescanning for new/disappeared devices. If the interval is smaller than 1s no rescanning takes place. If any devices are configured with smartctl.device also no rescanning takes place.",
 	).Default("10m").Duration()
 	smartctlDevices = kingpin.Flag("smartctl.device",
-		"The device to monitor (repeatable). Support use wildcard of devices path or system-link",
+		"The device to monitor (repeatable). Support use wildcard of devices path or symbolic link",
 	).Strings()
 	smartctlDeviceExclude = kingpin.Flag(
 		"smartctl.device-exclude",
