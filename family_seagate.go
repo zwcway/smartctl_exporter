@@ -7,7 +7,10 @@ type Seagate struct {
 
 func (s *Seagate) DeviceAttributeRaw(id string, name string, val float64) float64 {
 	switch id {
-	case "1", "7":
+	case
+		"1",   // Raw_Read_Error_Rate
+		"7",   // Seek_Error_Rate
+		"195": // Hardware_ECC_Recovered
 		v := int64(val)
 		// raw48:54
 		// 5 is 47-40bit
