@@ -90,7 +90,7 @@ var (
 		"The interval between rescanning for new/disappeared devices. If the interval is smaller than 1s no rescanning takes place. If any devices are configured with smartctl.device also no rescanning takes place.",
 	).Default("10m").Duration()
 	smartctlDevices = kingpin.Flag("smartctl.device",
-		"The device to monitor (repeatable)",
+		"The device to monitor (repeatable). Support use wildcard of devices path or system-link",
 	).Strings()
 	smartctlDeviceExclude = kingpin.Flag(
 		"smartctl.device-exclude",
@@ -142,7 +142,7 @@ func main() {
 
 	var devices []string
 	if len(*smartctlDevices) > 0 {
-		devices = *smartctlDevices
+		devices = readDevicesLink(*smartctlDevices)
 	} else {
 		level.Info(logger).Log("msg", "No devices specified, trying to load them automatically")
 		devices = scanDevices(logger)

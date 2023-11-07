@@ -14,28 +14,73 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
 	"regexp"
+	"slices"
+	"strings"
 )
 
 type deviceFilter struct {
 	ignorePattern *regexp.Regexp
 	acceptPattern *regexp.Regexp
+
+	ignores []string
+	accepts []string
 }
 
 func newDeviceFilter(ignoredPattern, acceptPattern string) (f deviceFilter) {
 	if ignoredPattern != "" {
-		f.ignorePattern = regexp.MustCompile(ignoredPattern)
+		f.ignores = readLinkInDevDir(ignoredPattern)
+		if len(f.ignores) == 0 {
+			f.ignorePattern = regexp.MustCompile(ignoredPattern)
+		}
 	}
 
 	if acceptPattern != "" {
-		f.acceptPattern = regexp.MustCompile(acceptPattern)
+		f.accepts = readLinkInDevDir(ignoredPattern)
+		if len(f.accepts) == 0 {
+			f.acceptPattern = regexp.MustCompile(acceptPattern)
+		}
 	}
 
+	return
+}
+
+func readLinkInDevDir(pattern string) (list []string) {
+	if !strings.HasPrefix(pattern, "/dev/") {
+		return
+	}
+
+	files, err := filepath.Glob("/dev/**/*")
+	if err != nil {
+		return
+	}
+
+	reg := regexp.MustCompile(pattern)
+
+	for _, file := range files {
+		if !reg.MatchString(file) {
+			continue
+		}
+		fs, err := os.Stat(file)
+		if err != nil || fs.Mode()&os.ModeSymlink == 0 {
+			continue
+		}
+		file, err = os.Readlink(file)
+		if err != nil {
+			continue
+		}
+		list = append(list, file)
+	}
 	return
 }
 
 // ignored returns whether the device should be ignored
 func (f *deviceFilter) ignored(name string) bool {
 	return ((f.ignorePattern != nil && f.ignorePattern.MatchString(name)) ||
-		(f.acceptPattern != nil && !f.acceptPattern.MatchString(name)))
+		(f.acceptPattern != nil && !f.acceptPattern.MatchString(name))) ||
+		(f.ignores != nil && slices.Index(f.ignores, name) >= 0) ||
+		(f.accepts != nil && slices.Index(f.accepts, name) >= 0)
+
 }

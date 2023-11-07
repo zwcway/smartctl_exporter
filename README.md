@@ -1,5 +1,10 @@
-[![CircleCI](https://circleci.com/gh/prometheus-community/smartctl_exporter.svg?style=svg)](https://circleci.com/gh/prometheus-community/smartctl_exporter)
-[![Container Repository on Quay](https://quay.io/repository/prometheuscommunity/smartctl-exporter/status "Container Repository on Quay")](https://quay.io/repository/prometheuscommunity/smartctl-exporter)
+[![CircleCI](https://circleci.com/gh/zwcway/smartctl_exporter.svg?style=svg)](https://circleci.com/gh/zwcway/smartctl_exporter)
+[![Container Repository on Quay](https://quay.io/repository/zwcway/smartctl-exporter/status "Container Repository on Quay")](https://quay.io/repository/zwcway/smartctl-exporter)
+
+# Add some features
+- --smartctl.device: Support use wildcard of devices path or system-link
+- support format raw value by device family. just like -v 1,raw48:54 in smartctl
+  - add `seagate`
 
 # smartctl_exporter
 Export smartctl statistics to prometheus
@@ -30,7 +35,7 @@ Flags:
                                rescanning takes place. If any devices are configured with smartctl.device also no rescanning takes
                                place.
       --smartctl.device=SMARTCTL.DEVICE ...  
-                               The device to monitor (repeatable)
+                               The device to monitor (repeatable). Support use wildcard of devices path or system-link
       --smartctl.device-exclude=""
                                Regexp of devices to exclude from automatic scanning. (mutually exclusive to
                                device-include)

@@ -37,20 +37,29 @@ type SMARTctl struct {
 	json   gjson.Result
 	logger log.Logger
 	device SMARTDevice
+	family SMARTDeviceFamily
+}
+
+type SMARTDeviceFamily interface {
+	DeviceAttributeRaw(id string, name string, value float64) float64
 }
 
 // NewSMARTctl is smartctl constructor
 func NewSMARTctl(logger log.Logger, json gjson.Result, ch chan<- prometheus.Metric) SMARTctl {
+	family := strings.TrimSpace(GetStringIfExists(json, "model_family", "unknown"))
+	serial := strings.TrimSpace(json.Get("serial_number").String())
+	model := strings.TrimSpace(json.Get("model_name").String())
 	return SMARTctl{
 		ch:     ch,
 		json:   json,
 		logger: logger,
 		device: SMARTDevice{
 			device: strings.TrimPrefix(strings.TrimSpace(json.Get("device.name").String()), "/dev/"),
-			serial: strings.TrimSpace(json.Get("serial_number").String()),
-			family: strings.TrimSpace(GetStringIfExists(json, "model_family", "unknown")),
-			model:  strings.TrimSpace(json.Get("model_name").String()),
+			serial: serial,
+			family: family,
+			model:  model,
 		},
+		family: smartctl_family(family, serial, model),
 	}
 }
 
@@ -183,10 +192,14 @@ func (smart *SMARTctl) mineDeviceAttribute() {
 			"thresh": "thresh",
 			"raw":    "raw.value",
 		} {
+			val := attribute.Get(path).Float()
+			if key == "raw" && smart.family != nil {
+				val = smart.family.DeviceAttributeRaw(id, name, val)
+			}
 			smart.ch <- prometheus.MustNewConstMetric(
 				metricDeviceAttribute,
 				prometheus.GaugeValue,
-				attribute.Get(path).Float(),
+				val,
 				smart.device.device,
 				name,
 				flagsShort,

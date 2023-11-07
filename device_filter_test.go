@@ -30,6 +30,7 @@ func TestDeviceFilter(t *testing.T) {
 		{"", "^💩0$", "veth0", true},
 		{"^💩", "", "💩3", true},
 		{"^💩", "", "veth0", false},
+		{"/dev/disk", "", "veth0", false},
 	}
 
 	for _, test := range tests {
