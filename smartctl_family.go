@@ -2,10 +2,6 @@ package main
 
 import "sync"
 
-type smartFamily struct {
-	detector func(family, serial, model string) SMARTDeviceFamily
-}
-
 var (
 	families = []func(family, serial, model string) SMARTDeviceFamily{
 		SeagateDetector,
